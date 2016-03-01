@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-pdf-to-image" version="0.0.1"
+        xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>Convert PDF To Image</name>
+    <js-module name="pdfToImage" src="www/pdfToImage.js">
+        <clobbers target="cordova.plugins.pdfToImage" />
+    </js-module>
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="PDFToImage">
+                <param name="ios-package" value="CDVPDFToImage" />
+            </feature>
+        </config-file>
+        <header-file src="src/ios/CDVPDFToImage.h" />
+        <source-file src="src/ios/CDVPDFToImage.m" />
+        <header-file src="src/ios/UIImage+PDF/PDFView.h" />
+        <source-file src="src/ios/UIImage+PDF/PDFView.m" />
+        <header-file src="src/ios/UIImage+PDF/NSData+MD5.h" />
+        <source-file src="src/ios/UIImage+PDF/NSData+MD5.m" />
+        <header-file src="src/ios/UIImage+PDF/NSString+MD5.h" />
+        <source-file src="src/ios/UIImage+PDF/NSString+MD5.m" />
+        <header-file src="src/ios/UIImage+PDF/UIView+Image.h" />
+        <source-file src="src/ios/UIImage+PDF/UIView+Image.m" />
+        <header-file src="src/ios/UIImage+PDF/UIImage+PDF.h" />
+        <source-file src="src/ios/UIImage+PDF/UIImage+PDF.m" />
+    </platform>
+</plugin>
