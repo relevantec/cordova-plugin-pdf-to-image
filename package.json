@@ -1,0 +1,25 @@
+{
+  "name": "cordova-plugin-pdf-to-image",
+  "version": "0.0.1",
+  "description": "A plugin for converting PDF to image",
+  "cordova": {
+    "id": "cordova-plugin-pdf-to-image",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zyun1/cordova-plugin-pdf-to-image.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "zyun1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zyun1/cordova-plugin-pdf-to-image/issues"
+  },
+  "homepage": "https://github.com/zyun1/cordova-plugin-pdf-to-image#readme"
+}
