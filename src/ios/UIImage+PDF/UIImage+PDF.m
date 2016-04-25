@@ -333,6 +333,68 @@ static BOOL _shouldCacheOnDisk = YES;
 	return pdfImage;
 }
 
++(UIImage *) imageWithPDFURL:(NSURL *)URL atSize:(CGSize)size atPage:(NSUInteger)page preserveAspectRatio:(BOOL)preserveAspectRatio minWidth:(NSUInteger)minWidth
+{
+    if(URL == nil || CGSizeEqualToSize(size, CGSizeZero) || page == 0)
+        return nil;
+    
+    UIImage *pdfImage = nil;
+    
+    CGFloat screenScale = [self screenScale];
+    NSString *cacheFilename = [ self cacheFilenameForURL:URL atSize:size atScaleFactor:[self screenScale] atPage:page preserveAspectRatio:preserveAspectRatio ];
+    
+    /**
+     * Calculate screen scale if image width is lesser than minWidth
+     */
+    if ((size.width  * screenScale) < minWidth) {
+        screenScale = minWidth / size.width;
+    }
+    
+    /**
+     * Check in Memory cached image before checking file system
+     */
+    if (_shouldCache)
+    {
+        pdfImage = [_imagesCache objectForKey:cacheFilename];
+        if (pdfImage) return pdfImage;
+    }
+    
+    
+    if(_shouldCacheOnDisk && [[ NSFileManager defaultManager ] fileExistsAtPath:cacheFilename ])
+    {
+        pdfImage = [ UIImage imageWithCGImage:[[ UIImage imageWithContentsOfFile:cacheFilename ] CGImage ] scale:screenScale orientation:UIImageOrientationUp ];
+    }
+    else
+    {
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef ctx = CGBitmapContextCreate(NULL, size.width * screenScale, size.height * screenScale, 8, 0, colorSpace, kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
+        CGContextScaleCTM(ctx, screenScale, screenScale);
+        
+        [PDFView renderIntoContext:ctx url:URL data:nil size:size page:page preserveAspectRatio:preserveAspectRatio];
+        CGImageRef image = CGBitmapContextCreateImage(ctx);
+        pdfImage = [[UIImage alloc] initWithCGImage:image scale:screenScale orientation:UIImageOrientationUp];
+        
+        CGImageRelease(image);
+        CGContextRelease(ctx);
+        CGColorSpaceRelease(colorSpace);
+        
+        if(_shouldCacheOnDisk && cacheFilename)
+        {
+            [ UIImagePNGRepresentation( pdfImage ) writeToFile:cacheFilename atomically:NO ];
+        }
+    }
+    
+    /**
+     * Cache image to in memory if active
+     */
+    if (pdfImage && cacheFilename && _shouldCache)
+    {
+        [_imagesCache setObject:pdfImage forKey:cacheFilename];
+    }
+    
+    return pdfImage;
+}
+
 +(UIImage *) imageWithPDFURL:(NSURL *)URL atSize:(CGSize)size
 {
     return [ self imageWithPDFURL:URL atSize:size atPage:1 preserveAspectRatio:NO];
@@ -390,6 +452,16 @@ static BOOL _shouldCacheOnDisk = YES;
     CGRect mediaRect = [ PDFView mediaRectForURL:URL atPage:page];
     
     return [ UIImage imageWithPDFURL:URL atSize:mediaRect.size atPage:page preserveAspectRatio:YES ];
+}
+
++(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL atPage:(NSUInteger)page minWidth:(NSNumber*)minWidth
+{
+    if ( URL == nil )
+        return nil;
+    
+    CGRect mediaRect = [ PDFView mediaRectForURL:URL atPage:page];
+    
+    return [ UIImage imageWithPDFURL:URL atSize:mediaRect.size atPage:page preserveAspectRatio:YES minWidth: [minWidth intValue]];
 }
 
 +(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL
