@@ -333,7 +333,7 @@ static BOOL _shouldCacheOnDisk = YES;
 	return pdfImage;
 }
 
-+(UIImage *) imageWithPDFURL:(NSURL *)URL atSize:(CGSize)size atPage:(NSUInteger)page preserveAspectRatio:(BOOL)preserveAspectRatio minWidth:(NSUInteger)minWidth
++(UIImage *) imageWithPDFURL:(NSURL *)URL atSize:(CGSize)size atPage:(NSUInteger)page preserveAspectRatio:(BOOL)preserveAspectRatio minWidth:(NSUInteger)minWidth maxWidth:(NSUInteger)maxWidth
 {
     if(URL == nil || CGSizeEqualToSize(size, CGSizeZero) || page == 0)
         return nil;
@@ -346,8 +346,10 @@ static BOOL _shouldCacheOnDisk = YES;
     /**
      * Calculate screen scale if image width is lesser than minWidth
      */
-    if ((size.width  * screenScale) < minWidth) {
-        screenScale = minWidth / size.width;
+    if ((minWidth > 0) && (size.width  * screenScale) < minWidth) {
+         screenScale = minWidth / size.width;
+    } else if ((maxWidth > 0) && (size.width  * screenScale) > maxWidth){
+        screenScale = maxWidth / size.width;
     }
     
     /**
@@ -454,14 +456,14 @@ static BOOL _shouldCacheOnDisk = YES;
     return [ UIImage imageWithPDFURL:URL atSize:mediaRect.size atPage:page preserveAspectRatio:YES ];
 }
 
-+(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL atPage:(NSUInteger)page minWidth:(NSNumber*)minWidth
++(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL atPage:(NSUInteger)page minWidth:(NSNumber*)minWidth maxWidth:(NSNumber*)maxWidth
 {
     if ( URL == nil )
         return nil;
     
     CGRect mediaRect = [ PDFView mediaRectForURL:URL atPage:page];
     
-    return [ UIImage imageWithPDFURL:URL atSize:mediaRect.size atPage:page preserveAspectRatio:YES minWidth: [minWidth intValue]];
+    return [ UIImage imageWithPDFURL:URL atSize:mediaRect.size atPage:page preserveAspectRatio:YES minWidth: [minWidth intValue] maxWidth: [maxWidth intValue]];
 }
 
 +(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL

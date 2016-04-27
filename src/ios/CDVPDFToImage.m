@@ -54,6 +54,7 @@ static NSString* const kBase64 = @"base64";
     NSString* target = (NSString*)[command argumentAtIndex:1];
     NSNumber* shouldUseJpeg = (NSNumber*)[command argumentAtIndex:2];
     NSNumber* minWidth = (NSNumber*)[command argumentAtIndex:4];
+    NSNumber* maxWidth = (NSNumber*)[command argumentAtIndex:5];
 
     [self.commandDelegate runInBackground:^{
         NSArray* pageNumbers = (NSArray*)[command argumentAtIndex:3];
@@ -115,7 +116,7 @@ static NSString* const kBase64 = @"base64";
                 
                 @autoreleasepool {
                     // Get the image of the relevant page
-                    UIImage* image = [UIImage originalSizeImageWithPDFURL:sourceURL atPage:pageNumber minWidth: minWidth];
+                    UIImage* image = [UIImage originalSizeImageWithPDFURL:sourceURL atPage:pageNumber minWidth: minWidth maxWidth: maxWidth];
                     NSData* imageData = nil;
                     NSString* resultString = nil;
 

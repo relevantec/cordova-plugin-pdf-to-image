@@ -65,6 +65,6 @@
 
 +(UIImage *) originalSizeImageWithPDFData:(NSData *)data;
 +(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL atPage:(NSUInteger)page;
-+(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL atPage:(NSUInteger)page minWidth:(NSNumber*)minWidth;
++(UIImage *) originalSizeImageWithPDFURL:(NSURL *)URL atPage:(NSUInteger)page minWidth:(NSNumber*)minWidth maxWidth:(NSNumber*)maxWidth;
 
 @end

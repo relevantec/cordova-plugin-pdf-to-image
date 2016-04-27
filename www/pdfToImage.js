@@ -7,7 +7,7 @@ function getPageCount(successCallback, errorCallback, filePath) {
 }
 exports.getPageCount = getPageCount;
 
-function convertToImage(successCallback, errorCallback, source, target, shouldUseJpeg, pages, minWidth) {
-    exec(successCallback, errorCallback, "PDFToImage", "convertToImage", [source, target, Number(shouldUseJpeg), pages, minWidth]);
+function convertToImage(successCallback, errorCallback, source, target, shouldUseJpeg, pages, minWidth, maxWidth) {
+    exec(successCallback, errorCallback, "PDFToImage", "convertToImage", [source, target, Number(shouldUseJpeg), pages, minWidth, maxWidth]);
 }
 exports.convertToImage = convertToImage;
