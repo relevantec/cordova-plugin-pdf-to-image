@@ -121,7 +121,7 @@ static NSString* const kBase64 = @"base64";
 
                     // JPEG
                     if (shouldUseJpeg) {
-                        imageData = UIImageJPEGRepresentation(image, 1.0);
+                        imageData = UIImageJPEGRepresentation(image, 0.9);
                     } else {
                         imageData = UIImagePNGRepresentation(image);
                     }
